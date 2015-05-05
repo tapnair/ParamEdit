@@ -6,11 +6,11 @@ import adsk.core, adsk.fusion, traceback
 # global event handlers referenced for the duration of the command
 handlers = []
 
-commandName = 'ParamEdit'
-commandDescription = 'Fusion 360 Parameter Editor'
+commandName = 'CHange Parameters'
+commandDescription = 'Enables you to edit all User Parameters'
 command_id= 'ParamEditCmd'
 control_id = 'ParamEditControl'
-menu_panel = 'InspectPanel'
+menu_panel = 'SolidModifyPanel'
 commandResources = './resources'
 
 def run(context):
@@ -27,7 +27,10 @@ def run(context):
                     # Get values from input form
                     cmd = args.firingEvent.sender
                     inputs = cmd.commandInputs
-                    
+                    if inputs.count < 1:
+                    	app.userInterface.messageBox('No User Parameters in the model')
+                    	return 
+                     
                     # Get Fusion Objects
                     design = app.activeProduct
                     unitsMgr = design.unitsManager
