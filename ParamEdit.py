@@ -1,12 +1,16 @@
 #Author-Patrick Rainsberry
 #Description-Creates a GUI for all User Parameters
 
+# Script to update all user parameters in a model
+# Any variables will be loaded into the UI form with current value
+# New values are validated before applying to the model. 
+
 import adsk.core, adsk.fusion, traceback
 
 # global event handlers referenced for the duration of the command
 handlers = []
 
-commandName = 'CHange Parameters'
+commandName = 'ParamEdit'
 commandDescription = 'Enables you to edit all User Parameters'
 command_id= 'ParamEditCmd'
 control_id = 'ParamEditControl'
