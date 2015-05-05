@@ -1,0 +1,12 @@
+{
+	"autodeskProduct":	"Fusion360",
+	"type":	"addin",
+	"id":	"20984b2f-e336-4891-b64e-5e542449b15b",
+	"author":	"Patrick Rainsberry",
+	"description":	{
+		"":	"Creates a GUI for all User Parameters"
+	},
+	"version":	"0.1",
+	"runOnStartup":	false,
+	"supportedOS":	"windows|mac"
+}
