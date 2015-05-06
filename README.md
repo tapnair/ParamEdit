@@ -19,7 +19,9 @@ For example, on my Mac the folder is located in:
 
 /Users/USERNAME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Addins/
 
-7. Next time you start Fusion the addin will be in the list.  Or you can select the green plus sign and browse to paramedit.py     ![Addins Dialog](./resources/AddinsDialog.png)
+7. Next time you start Fusion the addin will be in the list.  Or you can select the green plus sign and browse to paramedit.py
+
+    ![Addins Dialog](./resources/AddinsDialog.png)
 ## Usage
 
 1. Enter the Model environment
