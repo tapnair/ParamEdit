@@ -1,12 +1,10 @@
-# ![](./resources/32x32.png) Fusion360Image2Surface
+# ![](./resources/32x32.png) EditParam
 
-This is an [Autodesk Fusion 360](http://fusion360.autodesk.com/) script that's used for generating surfaces from images.
-
-![Moon Mesh](./resources/MoonMesh.png) ![Moon T-Spline](./resources/MoonTSpline.png)
+This is an [Autodesk Fusion 360](http://fusion360.autodesk.com/) script that's used for simply editing user parameters.
 
 ## Installation
 
-Copy the "ParamEdit" folder into your Fusion 360 "My Scripts" folder. You may find this folder using the following steps:
+Copy the "ParamEdit" folder into your Fusion 360 "Addins" folder. You may find this folder using the following steps:
 
 1. Start Fusion 360 and then select the File -> Scripts... menu item
 2. The Scripts Manager dialog will appear and display the "My Scripts" folder and "Sample Scripts" folders
