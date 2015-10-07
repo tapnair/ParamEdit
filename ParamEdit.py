@@ -12,10 +12,35 @@ handlers = []
 
 commandName = 'ParamEdit'
 commandDescription = 'Enables you to edit all User Parameters'
-command_id= 'ParamEditCmd'
-control_id = 'ParamEditControl'
+command_id = 'ParamEditCmd'
 menu_panel = 'SolidModifyPanel'
 commandResources = './resources'
+
+def updateParams(inputs):
+    
+    # Get Fusion Objects
+    app = adsk.core.Application.get()
+    ui  = app.userInterface
+    design = app.activeProduct
+    unitsMgr = design.unitsManager
+    
+    if inputs.count < 1:
+        ui.messageBox('No User Parameters in the model')
+        return          
+    
+    # Set all parameter values based on the input form                            
+    for param in design.userParameters:
+        inputExpresion = inputs.itemById(param.name).value
+        
+        # Use Fusion Units Manager to validate user expresion                        
+        if unitsMgr.isValidExpression(inputExpresion, unitsMgr.defaultLengthUnits):
+            
+            # Set parameter value from input form                         
+            param.expression = inputExpresion
+        else:
+            ui.messageBox("The following expresion was invalid: \n" +
+                            param.name + '\n' +
+                            inputExpresion)
 
 def run(context):
     ui = None
@@ -23,6 +48,25 @@ def run(context):
         app = adsk.core.Application.get()
         ui  = app.userInterface
         
+        # Handle the input changed event.        
+        class InputChangedHandler(adsk.core.InputChangedEventHandler):
+            def __init__(self):
+                super().__init__()
+            def notify(self, args):
+                app = adsk.core.Application.get()
+                ui  = app.userInterface
+                try:
+                    cmd = args.firingEvent.sender
+                    inputs = cmd.commandInputs
+                    updateParams(inputs)
+                    adsk.doEvents()
+                    
+                except:
+                    if ui:
+                        ui.messageBox('command executed failed:\n{}'
+                        .format(traceback.format_exc()))
+        
+        # Handle the execute event.
         class CommandExecuteHandler(adsk.core.CommandEventHandler):
             def __init__(self):
                 super().__init__()
@@ -31,27 +75,8 @@ def run(context):
                     # Get values from input form
                     cmd = args.firingEvent.sender
                     inputs = cmd.commandInputs
-                    if inputs.count < 1:
-                    	app.userInterface.messageBox('No User Parameters in the model')
-                    	return 
-                     
-                    # Get Fusion Objects
-                    design = app.activeProduct
-                    unitsMgr = design.unitsManager
-                    
-                    # Set all parameter values based on the input form                            
-                    for param in design.userParameters:
-                        inputExpresion = inputs.itemById(param.name).value
-                        
-                        # Use Fusion Units Manager to validate user expresion                        
-                        if unitsMgr.isValidExpression(inputExpresion, unitsMgr.defaultLengthUnits):
-                            
-                            # Set parameter value from input form                         
-                            param.expression = inputExpresion
-                        else:
-                            ui.messageBox("The following expresion was invalid: \n" +
-                                            param.name + '\n' +
-                                            inputExpresion)                    
+                    updateParams(inputs)
+                                        
                 except:
                     if ui:
                         ui.messageBox('command executed failed:\n{}'
@@ -66,9 +91,12 @@ def run(context):
                     cmd = args.command
                     onExecute = CommandExecuteHandler()
                     cmd.execute.add(onExecute)
+                    onChange = InputChangedHandler()
+                    cmd.inputChanged.add(onChange)
                     
                     # keep the handler referenced beyond this function
                     handlers.append(onExecute)
+                    handlers.append(onChange)
                     
                     # Define UI Elements
                     commandInputs_ = cmd.commandInputs                
@@ -98,8 +126,8 @@ def run(context):
         handlers.append(onCommandCreated)
 
         # Add the controls to the Inspect toolbar panel.
-        inspectPanel = ui.toolbarPanels.itemById(menu_panel)
-        buttonControl = inspectPanel.controls.addCommand(buttonDef, control_id)
+        modifyPanel = ui.allToolbarPanels.itemById(menu_panel)
+        buttonControl = modifyPanel.controls.addCommand(buttonDef)
         buttonControl.isVisible = True
 
     except:
@@ -114,8 +142,8 @@ def stop(context):
         commandDef = ui.commandDefinitions.itemById(command_id)
         commandDef.deleteMe()
 
-        panel = ui.toolbarPanels.itemById(menu_panel)
-        control = panel.controls.itemById(control_id)
+        panel = ui.allToolbarPanels.itemById(menu_panel)
+        control = panel.controls.itemById(command_id)
         control.deleteMe()
     except:
         if ui:
