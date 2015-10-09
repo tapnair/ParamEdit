@@ -47,9 +47,9 @@ def run(context):
     try:
         app = adsk.core.Application.get()
         ui  = app.userInterface
-        
+
         # Handle the input changed event.        
-        class InputChangedHandler(adsk.core.InputChangedEventHandler):
+        class executePreviewHandler(adsk.core.CommandEventHandler):
             def __init__(self):
                 super().__init__()
             def notify(self, args):
@@ -59,13 +59,12 @@ def run(context):
                     cmd = args.firingEvent.sender
                     inputs = cmd.commandInputs
                     updateParams(inputs)
-                    adsk.doEvents()
                     
                 except:
                     if ui:
                         ui.messageBox('command executed failed:\n{}'
                         .format(traceback.format_exc()))
-        
+                        
         # Handle the execute event.
         class CommandExecuteHandler(adsk.core.CommandEventHandler):
             def __init__(self):
@@ -81,22 +80,23 @@ def run(context):
                     if ui:
                         ui.messageBox('command executed failed:\n{}'
                         .format(traceback.format_exc()))
-
+        
+        # Handle the execute event.
         class CommandCreatedEventHandlerPanel(adsk.core.CommandCreatedEventHandler):
             def __init__(self):
                 super().__init__() 
             def notify(self, args):
                 try:
-                    # Setup Handlers for change and execute
+                    # Setup Handlers for update and execute
                     cmd = args.command
                     onExecute = CommandExecuteHandler()
                     cmd.execute.add(onExecute)
-                    onChange = InputChangedHandler()
-                    cmd.inputChanged.add(onChange)
+                    onUpdate = executePreviewHandler()
+                    cmd.executePreview.add(onUpdate)
                     
                     # keep the handler referenced beyond this function
                     handlers.append(onExecute)
-                    handlers.append(onChange)
+                    handlers.append(onUpdate)
                     
                     # Define UI Elements
                     commandInputs_ = cmd.commandInputs                
