@@ -104,6 +104,7 @@ def run(context):
                     # Add all parameters to the input form
                     design = app.activeProduct
                     for param in design.userParameters:                                         
+                        #if param.name[0] != '_':
                         commandInputs_.addStringValueInput(param.name,
                                                            param.name,
                                                            param.expression)                
