@@ -31,3 +31,4 @@ For example, on my Mac the folder is located in:
     ![Change Parameters](./resources/changeParams.png)
 3. Now you can easily modify and User Generated parameters in a simplified UI by selecting paramEdit
   - Select Modify->paramEdit
+  - Update changes are now previewed live in the UI
