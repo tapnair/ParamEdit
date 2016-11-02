@@ -6,15 +6,16 @@
 # New values are validated before applying to the model. 
 
 import adsk.core, adsk.fusion, traceback
+from . import Fusion360CommandBase
 
-# global event handlers referenced for the duration of the command
-handlers = []
+commandName1 = 'ParamEdit'
+commandDescription1 = 'Enables you to edit all User Parameters'
+commandResources1 = './resources'
+cmdId1 = 'ParamEditCmd'
+myWorkspace1 = 'FusionSolidEnvironment'
+myToolbarPanelID1 = 'SolidModifyPanel'
 
-commandName = 'ParamEdit'
-commandDescription = 'Enables you to edit all User Parameters'
-command_id = 'ParamEditCmd'
-menu_panel = 'SolidModifyPanel'
-commandResources = './resources'
+debug = False
 
 def updateParams(inputs):
     
@@ -37,115 +38,38 @@ def updateParams(inputs):
             
             # Set parameter value from input form                         
             param.expression = inputExpresion
+        
         else:
             ui.messageBox("The following expresion was invalid: \n" +
                             param.name + '\n' +
                             inputExpresion)
 
+class ParamEditCommand(Fusion360CommandBase.Fusion360CommandBase):
+    def onPreview(self, command, inputs):
+        updateParams(inputs)
+    
+    def onDestroy(self, command, inputs, reason_):    
+        pass
+    
+    def onInputChanged(self, command, inputs, changedInput):
+        pass
+    
+    def onExecute(self, command, inputs):
+        updateParams(inputs)
+    
+    def onCreate(self, command, inputs):
+        app = adsk.core.Application.get()
+        design = app.activeProduct
+        for param in design.userParameters:                                         
+            #if param.name[0] != '_':
+            inputs.addStringValueInput(param.name,
+                                       param.name,
+                                       param.expression)
+
+##### Runtime Add 1 entry for each command#######
+newCommand1 = ParamEditCommand(commandName1, commandDescription1, commandResources1, cmdId1, myWorkspace1, myToolbarPanelID1, debug)
+
 def run(context):
-    ui = None
-    try:
-        app = adsk.core.Application.get()
-        ui  = app.userInterface
-
-        # Handle the input changed event.        
-        class executePreviewHandler(adsk.core.CommandEventHandler):
-            def __init__(self):
-                super().__init__()
-            def notify(self, args):
-                app = adsk.core.Application.get()
-                ui  = app.userInterface
-                try:
-                    cmd = args.firingEvent.sender
-                    inputs = cmd.commandInputs
-                    updateParams(inputs)
-                    
-                except:
-                    if ui:
-                        ui.messageBox('command executed failed:\n{}'
-                        .format(traceback.format_exc()))
-                        
-        # Handle the execute event.
-        class CommandExecuteHandler(adsk.core.CommandEventHandler):
-            def __init__(self):
-                super().__init__()
-            def notify(self, args):
-                try:  
-                    # Get values from input form
-                    cmd = args.firingEvent.sender
-                    inputs = cmd.commandInputs
-                    updateParams(inputs)
-                                        
-                except:
-                    if ui:
-                        ui.messageBox('command executed failed:\n{}'
-                        .format(traceback.format_exc()))
-        
-        # Handle the execute event.
-        class CommandCreatedEventHandlerPanel(adsk.core.CommandCreatedEventHandler):
-            def __init__(self):
-                super().__init__() 
-            def notify(self, args):
-                try:
-                    # Setup Handlers for update and execute
-                    cmd = args.command
-                    onExecute = CommandExecuteHandler()
-                    cmd.execute.add(onExecute)
-                    onUpdate = executePreviewHandler()
-                    cmd.executePreview.add(onUpdate)
-                    
-                    # keep the handler referenced beyond this function
-                    handlers.append(onExecute)
-                    handlers.append(onUpdate)
-                    
-                    # Define UI Elements
-                    commandInputs_ = cmd.commandInputs                
-                  
-                    # Add all parameters to the input form
-                    design = app.activeProduct
-                    for param in design.userParameters:                                         
-                        #if param.name[0] != '_':
-                        commandInputs_.addStringValueInput(param.name,
-                                                           param.name,
-                                                           param.expression)                
-                except:
-                    if ui:
-                        ui.messageBox('Panel command created failed:\n{}'
-                        .format(traceback.format_exc()))
-                                       
-        # Get the UserInterface object and the CommandDefinitions collection.
-        cmdDefs = ui.commandDefinitions
-         
-        # Create a basic button command definition.
-        buttonDef = cmdDefs.addButtonDefinition(command_id, 
-                                                commandName, 
-                                                commandDescription, 
-                                                commandResources)                                               
-        # Setup Event Handler
-        onCommandCreated = CommandCreatedEventHandlerPanel()
-        buttonDef.commandCreated.add(onCommandCreated)
-        handlers.append(onCommandCreated)
-
-        # Add the controls to the Inspect toolbar panel.
-        modifyPanel = ui.allToolbarPanels.itemById(menu_panel)
-        buttonControl = modifyPanel.controls.addCommand(buttonDef)
-        buttonControl.isVisible = True
-
-    except:
-        if ui:
-            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
-
+    newCommand1.onRun()
 def stop(context):
-    ui = None
-    try:
-        app = adsk.core.Application.get()
-        ui  = app.userInterface
-        commandDef = ui.commandDefinitions.itemById(command_id)
-        commandDef.deleteMe()
-
-        panel = ui.allToolbarPanels.itemById(menu_panel)
-        control = panel.controls.itemById(command_id)
-        control.deleteMe()
-    except:
-        if ui:
-            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+    newCommand1.onStop()
