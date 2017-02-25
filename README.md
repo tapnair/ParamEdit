@@ -33,14 +33,6 @@ For example, on my Mac the folder is located in:
   - Select Modify->paramEdit
   - Update changes are now previewed live in the UI
 
-## License
-Samples are licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). Please see the [LICENSE](LICENSE) file for full details.
-
-## Written by
-
-Written by [Patrick Rainsberry](https://twitter.com/prrainsberry) <br /> (Autodesk Fusion 360 Business Development)
-
-See more useful [Fusion 360 Utilities](https://tapnair.github.io/index.html)
 
 ## License
 Samples are licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). Please see the [LICENSE](LICENSE) file for full details.
