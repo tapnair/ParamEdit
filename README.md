@@ -2,6 +2,10 @@
 
 This is an [Autodesk Fusion 360](http://fusion360.autodesk.com/) script that's used for simply editing user parameters.
 
+
+![Change Parameters](./resources/cover_image.png)
+
+
 # Installation
 [Click here to download the Add-in](https://github.com/tapnair/ParamEdit/archive/master.zip)
 
