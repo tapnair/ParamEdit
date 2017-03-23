@@ -2,26 +2,11 @@
 
 This is an [Autodesk Fusion 360](http://fusion360.autodesk.com/) script that's used for simply editing user parameters.
 
-## Installation
+# Installation
+[Click here to download the Add-in](https://github.com/tapnair/ParamEdit/archive/master.zip)
 
-Copy the "ParamEdit" folder into your Fusion 360 "Addins" folder. You may find this folder using the following steps:
+After downloading the zip file follow the [installation instructions here](https://tapnair.github.io/installation.html) for your particular OS version of Fusion 360 
 
-1. Start Fusion 360 and then select the File -> Scripts... menu item
-2. The Scripts Manager dialog will appear and display the "My Scripts" folder and "Sample Scripts" folders
-3. Click on Addins at the top of the dialog box
-4. Select one of the "My Addins" files and then click on the "+" Details icon near the bottom of the dialog.
-  - If there are no files in the "My Addins" folder then create a default one.
-  - Click the Create button, select Python, and then OK.
-5. With the user addin selected, click the Full Path "..." button to display a file explorer window that will display the "Addins" folder
-6. Copy this addin folder into this location
-
-For example, on my Mac the folder is located in:
-
-/Users/USERNAME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Addins/
-
-7. Next time you start Fusion the addin will be in the list.  Or you can select the green plus sign and browse to paramedit.py
-
-    ![Addins Dialog](./resources/AddinsDialog.png)
 ## Usage
 
 1. Enter the Model environment
